@@ -7,34 +7,37 @@
 let url = new URL(location.href);
 let id = url.searchParams.get('id');
 
+let mainDiv = document.createElement('div');
+mainDiv.classList.add('block');
+
+let titleDiv = document.createElement('div');
+titleDiv.classList.add('title-block');
+
+let btn = document.createElement('button');
+
+let DivBtn = document.createElement('div');
+DivBtn.classList.add('user-baton');
+btn.innerText = 'Post of current user';
+DivBtn.append(btn);
+
 fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
     .then(response => response.json())
     .then(users => {
 
-        let mainDiv = document.createElement('div');
-        mainDiv.classList.add('block');
-        let titleDiv = document.createElement('div');
-        titleDiv.classList.add('title-block');
-        let btn = document.createElement('button');
-        let btnDiv = document.createElement('div');
-        btnDiv.classList.add('user-baton');
-        btn.innerText = 'Post of current user';
-        btnDiv.append(btn);
-
-        function recursion(element) {
+        function rec(element) {
             for (const value in element) {
                 if (typeof element[value] !== 'object') {
                     let p = document.createElement('p');
                     p.classList.add('user-item');
-                    p.append(`${value} : ${element[value]}`);
+                    p.append(`${value} ${element[value]}`);
                     mainDiv.append(p);
                 } else {
-                    recursion(element[value]);
+                    rec(element[value]);
                 }
             }
         }
 
-        recursion(users);
+        rec(users);
 
         btn.onclick = function () {
             fetch(`https://jsonplaceholder.typicode.com/users/${id}/posts`)
@@ -49,10 +52,8 @@ fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
                         let titleDivItem = document.createElement('div');
                         titleDivItem.append(item.title, multitran);
                         titleDiv.append(titleDivItem);
-
                     }
-
                 });
         };
-        document.body.append(mainDiv, btnDiv, titleDiv);
+        document.body.append(mainDiv, DivBtn, titleDiv);
     })
